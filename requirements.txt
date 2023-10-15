@@ -1,0 +1,4 @@
+jupyter~=1.0.0
+
+polars~=0.19.8
+pyarrow~=13.0.0

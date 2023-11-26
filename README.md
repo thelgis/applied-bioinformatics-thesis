@@ -12,6 +12,8 @@
 
 ### Initialize Python Environment 
 
+Minimum Python Version: **3.11**
+
 ```bash
 source venv/bin/activate
 pip install -r requirements.txt

@@ -20,15 +20,15 @@
 - [X] GSE90081	RA	24	12	12	Whole blood	PBMCs	Expression
 
 # SjS
-- [ ] GSE23117	SjS	15	5	10	Salivary gland	NA	Expression
-- [ ] GSE40611	SjS	35	18	17	Parotid gland	NA	Expression
-- [ ] GSE51092	SjS	222	32	190	Peripheral blood	PBMCs	Expression
-- [ ] GSE7451	SjS	20	10	10	Saliva	NA	Expression
-- [ ] GSE84844	SjS	60	30	30	Whole blood	NA	Expression
-- [ ] GSE93683 Naive T cells	SjS	12	6	6	Whole blood	Naive T cells	Expression
-- [ ] GSE93683 Central memory T cells	SjS	12	6	6	Whole blood	Central memory T cells	Expression
-- [ ] GSE93683 Memory effector T cells	SjS	12	6	6	Whole blood	Memory effector T cells	Expression
-- [ ] GSE93683 Memory T cells	SjS	12	6	6	Whole blood	Memory T cells	Expression
+- [X] GSE23117	SjS	15	5	10	Salivary gland	NA	Expression
+- [X] GSE40611	SjS	35	18	17	Parotid gland	NA	Expression
+- [X] GSE51092	SjS	222	32	190	Peripheral blood	PBMCs	Expression
+- [X] GSE7451	SjS	20	10	10	Saliva	NA	Expression
+- [X] GSE84844	SjS	60	30	30	Whole blood	NA	Expression
+- [X] GSE93683 Naive T cells	SjS	12	6	6	Whole blood	Naive T cells	Expression
+- [X] GSE93683 Central memory T cells	SjS	12	6	6	Whole blood	Central memory T cells	Expression
+- [X] GSE93683 Memory effector T cells	SjS	12	6	6	Whole blood	Memory effector T cells	Expression
+- [X] GSE93683 Memory T cells	SjS	12	6	6	Whole blood	Memory T cells	Expression
 
 # SLE
 - [ ] GSE10325 T cells	SLE	22	9	13	Peripheral blood	T cells	Expression

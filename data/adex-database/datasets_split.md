@@ -4,21 +4,20 @@
 - [X] GSE110169 RA	RA	161	77	84	Peripheral blood	NA	Expression
 - [X] GSE12021 GPL96	RA	21	9	12	Synovial membrane	NA	Expression
 - [X] GSE12021 GPL97	RA	16	4	12	Synovial membrane	NA	Expression
-- [ ] GSE38351 RA GPL96	RA	20	12	8	Peripheral blood	Monocytes	Expression
-- [ ] GSE38351 RA GPL570	RA	23	19	4	Peripheral blood	Monocytes	Expression
-- [ ] GSE42861	RA	689	335	354	Peripheral blood	PBLs	Methylation
-- [ ] GSE45291 RA	RA	513	20	493	Whole blood	NA	Expression
-- [ ] GSE55235	RA	20	10	10	Synovial membrane	NA	Expression
-- [ ] GSE55457	RA	23	10	13	Synovial membrane	NA	Expression
-- [ ] GSE56649	RA	22	9	13	Peripheral blood	T cells	Expression
-- [ ] GSE57383	RA	28	19	9	Peripheral blood	Monocytes	Expression
-- [ ] GSE65010 Naive regulatory T cells	RA	12	6	6	Peripheral blood	Naive regulatory T cells	Expression
-- [ ] GSE65010 Naive effector T cells	RA	12	6	6	Peripheral blood	Naive effector T cells	Expression
-- [ ] GSE65010 Memory regulatory T cells	RA	12	6	6	Peripheral blood	Memory regulatory T cells	Expression
-- [ ] GSE65010 Memory effector T cells	RA	12	6	6	Peripheral blood	Memory effector T cells	Expression
-- [ ] GSE77298	RA	23	7	16	Synovial membrane	NA	Expression
-- [ ] GSE89408	RA	180	28	152	Synovial membrane	NA	Expression
-- [ ] GSE90081	RA	24	12	12	Whole blood	PBMCs	Expression
+- [X] GSE38351 RA GPL96	RA	20	12	8	Peripheral blood	Monocytes	Expression
+- [X] GSE38351 RA GPL570	RA	23	19	4	Peripheral blood	Monocytes	Expression
+- [X] GSE45291 RA	RA	513	20	493	Whole blood	NA	Expression
+- [X] GSE55235	RA	20	10	10	Synovial membrane	NA	Expression
+- [X] GSE55457	RA	23	10	13	Synovial membrane	NA	Expression
+- [X] GSE56649	RA	22	9	13	Peripheral blood	T cells	Expression
+- [X] GSE57383	RA	28	19	9	Peripheral blood	Monocytes	Expression
+- [X] GSE65010 Naive regulatory T cells	RA	12	6	6	Peripheral blood	Naive regulatory T cells	Expression
+- [X] GSE65010 Naive effector T cells	RA	12	6	6	Peripheral blood	Naive effector T cells	Expression
+- [X] GSE65010 Memory regulatory T cells	RA	12	6	6	Peripheral blood	Memory regulatory T cells	Expression
+- [X] GSE65010 Memory effector T cells	RA	12	6	6	Peripheral blood	Memory effector T cells	Expression
+- [X] GSE77298	RA	23	7	16	Synovial membrane	NA	Expression
+- [X] GSE89408	RA	180	28	152	Synovial membrane	NA	Expression
+- [X] GSE90081	RA	24	12	12	Whole blood	PBMCs	Expression
 
 # SjS
 - [ ] GSE23117	SjS	15	5	10	Salivary gland	NA	Expression

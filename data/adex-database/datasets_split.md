@@ -60,14 +60,14 @@
 - [X] GSE117931 GPL14951	SSc	37	19	18	Whole blood	PBMCs	Expression
 
 # T1D
-- [ ] GSE11907 T1D GPL97	T1D	27	7	20	Peripheral blood	PBMCs	Expression
-- [ ] GSE11907 T1D GPL96	T1D	30	10	20	Peripheral blood	PBMCs	Expression
-- [ ] GSE55098	T1D	22	10	12	Peripheral blood	PBMCs	Expression
-- [ ] GSE60424	T1D	8	4	4	Whole blood	NA	Expression
-- [ ] GSE60424 Neutrophils	T1D	8	4	4	Whole blood	Neutrophils	Expression
-- [ ] GSE60424 Monocytes	T1D	8	4	4	Whole blood	Monocytes	Expression
-- [ ] GSE60424 B cells	T1D	8	4	4	Whole blood	B cells	Expression
-- [ ] GSE60424 T cells	T1D	16	8	8	Whole blood	T cells	Expression
-- [ ] GSE60424 NK	T1D	6	4	2	Whole blood	NK	Expression
-- [ ] GSE112341	T1D	22	10	12	Peripheral blood	Memory effector T cells	Expression
-- [ ] GSE110914	T1D	21	16	5	Peripheral blood	Neutrophils	Expression
+- [X] GSE11907 T1D GPL97	T1D	27	7	20	Peripheral blood	PBMCs	Expression
+- [X] GSE11907 T1D GPL96	T1D	30	10	20	Peripheral blood	PBMCs	Expression
+- [X] GSE55098	T1D	22	10	12	Peripheral blood	PBMCs	Expression
+- [X] GSE60424	T1D	8	4	4	Whole blood	NA	Expression
+- [X] GSE60424 Neutrophils	T1D	8	4	4	Whole blood	Neutrophils	Expression
+- [X] GSE60424 Monocytes	T1D	8	4	4	Whole blood	Monocytes	Expression
+- [X] GSE60424 B cells	T1D	8	4	4	Whole blood	B cells	Expression
+- [X] GSE60424 T cells	T1D	16	8	8	Whole blood	T cells	Expression
+- [X] GSE60424 NK	T1D	6	4	2	Whole blood	NK	Expression
+- [X] GSE112341	T1D	22	10	12	Peripheral blood	Memory effector T cells	Expression
+- [X] GSE110914	T1D	21	16	5	Peripheral blood	Neutrophils	Expression

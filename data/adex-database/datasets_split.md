@@ -53,11 +53,11 @@
 - [ ] GSE124939	SLE	14	7	7	Skin	Keratinocytes	Expression
 
 # SSc
-- [ ] GSE104174	SSc	72	15	57	Whole blood	Macrophages	Expression
-- [ ] GSE63903	SSc	14	5	9	Peripheral blood	Memory T cells	Expression
-- [ ] GSE95065	SSc	33	15	18	Skin	NA	Expression
-- [ ] GSE124073	SSc	73	18	55	Peripheral blood	Monocytes	Expression
-- [ ] GSE117931 GPL14951	SSc	37	19	18	Whole blood	PBMCs	Expression
+- [X] GSE104174	SSc	72	15	57	Whole blood	Macrophages	Expression
+- [X] GSE63903	SSc	14	5	9	Peripheral blood	Memory T cells	Expression
+- [X] GSE95065	SSc	33	15	18	Skin	NA	Expression
+- [X] GSE124073	SSc	73	18	55	Peripheral blood	Monocytes	Expression
+- [X] GSE117931 GPL14951	SSc	37	19	18	Whole blood	PBMCs	Expression
 
 # T1D
 - [ ] GSE11907 T1D GPL97	T1D	27	7	20	Peripheral blood	PBMCs	Expression

@@ -1,3 +1,4 @@
+from functools import reduce
 from pathlib import Path
 from typing import List, Set
 
@@ -40,3 +41,16 @@ def gene_intersection(dataframes: List[DataFrame]) -> Set[Gene]:
             )
 
     return common_genes
+
+
+def clean_dataframe(dataframes: List[DataFrame]) -> DataFrame:
+    """
+    Gives a dataframe with the samples of all the dataframes joined but only for the common genes
+    """
+    head, *tail = dataframes
+
+    return reduce(
+        lambda left, right: left.join(right, on="gene", how="inner"),
+        tail,
+        head
+    )

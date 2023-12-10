@@ -43,7 +43,7 @@ def gene_intersection(dataframes: List[DataFrame]) -> Set[Gene]:
     return common_genes
 
 
-def clean_dataframe(dataframes: List[DataFrame]) -> DataFrame:
+def common_genes_dataframe(dataframes: List[DataFrame]) -> DataFrame:
     """
     Gives a dataframe with the samples of all the dataframes joined but only for the common genes
     """

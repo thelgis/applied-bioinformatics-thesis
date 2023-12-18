@@ -54,3 +54,61 @@ def common_genes_dataframe(dataframes: List[DataFrame]) -> DataFrame:
         tail,
         head
     )
+
+
+def high_frequency_genes_dataframe(
+    dataframes: List[DataFrame],
+    allowed_null_percentage: float = 0.2,
+    drop_frequencies_column: bool = True
+) -> DataFrame:
+    """
+    Gives a dataframe with the samples of all the dataframes joined, but only for the genes that appear in a specific
+    percent of the samples.
+
+    :param dataframes: dataframes to be joined
+    :param allowed_null_percentage: will keep only genes that have a lower than this null percentage across samples
+    :param drop_frequencies_column: if frequencies column should be dropped (or kept for exploratory analysis)
+    :return:
+    """
+    head, *tail = dataframes
+
+    outer_joined_df = reduce(
+        lambda left, right: left.join(right, on="gene", how="outer"),
+        tail,
+        head
+    )
+
+    filtered_df = (
+        outer_joined_df.with_columns(pl.sum_horizontal(pl.all().is_null() / pl.all().count()).alias("Null-Percentage"))
+        .filter(pl.col("Null-Percentage") <= allowed_null_percentage)
+    )
+
+    if drop_frequencies_column:
+        return filtered_df.drop("Null-Percentage")
+
+    return filtered_df
+
+
+def get_pre_processed_dataset(
+    condition: Condition,
+    path: str,
+    allowed_null_percentage: float = 0.2
+) -> DataFrame:
+    """
+    :param condition:
+    :param path: the path where the samples are located
+    :param allowed_null_percentage: will keep only genes that have a lower than this null percentage across samples
+    :return: a dataset of a particular condition pre-processed in its final state
+    """
+    condition_data: List[DataFrame] = load_data_per_condition(condition, path)
+
+    # keep only common genes between datasets
+    condition_data_common_genes: DataFrame = high_frequency_genes_dataframe(condition_data, allowed_null_percentage)
+
+    transposed = condition_data_common_genes.transpose(include_header=True, header_name='sample')
+    return (
+        transposed
+            .rename(transposed.head(1).to_dicts().pop())    # add header
+            .slice(1,)                                      # remove first row because it is the header duplicated
+            .rename({"gene": "sample"})                     # fix header
+    )

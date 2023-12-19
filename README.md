@@ -1,4 +1,4 @@
-# MSc Applied Bioinformatics Thesis
+# Applied Bioinformatics Thesis
 
 ## Topic (TODO)
 

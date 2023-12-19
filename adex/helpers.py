@@ -91,24 +91,52 @@ def high_frequency_genes_dataframe(
 
 def get_pre_processed_dataset(
     condition: Condition,
-    path: str,
-    allowed_null_percentage: float = 0.2
+    data_path: str,
+    metadata_path: str,
+    allowed_null_percentage: float = 0.2,
+    return_metadata: bool = True
 ) -> DataFrame:
     """
     :param condition:
-    :param path: the path where the samples are located
+    :param data_path: the path where the samples are located
+    :param metadata_path: the path where the metadata of the samples is located
     :param allowed_null_percentage: will keep only genes that have a lower than this null percentage across samples
+    :param return_metadata: if the metadata columns will be returned as part of the dataframe
     :return: a dataset of a particular condition pre-processed in its final state
     """
-    condition_data: List[DataFrame] = load_data_per_condition(condition, path)
+    data: List[DataFrame] = load_data_per_condition(condition, data_path)
 
-    # keep only common genes between datasets
-    condition_data_common_genes: DataFrame = high_frequency_genes_dataframe(condition_data, allowed_null_percentage)
+    # keep only frequent genes between datasets
+    data_frequent_genes: DataFrame = high_frequency_genes_dataframe(data, allowed_null_percentage)
 
-    transposed = condition_data_common_genes.transpose(include_header=True, header_name='sample')
-    return (
-        transposed
+    transposed = data_frequent_genes.transpose(include_header=True, header_name='Sample')
+    transposed_fixed = (
+            transposed
             .rename(transposed.head(1).to_dicts().pop())    # add header
             .slice(1,)                                      # remove first row because it is the header duplicated
-            .rename({"gene": "sample"})                     # fix header
+            .rename({"gene": "Sample"})                     # fix header
     )
+
+    # join with metadata and keep a sample only if metadata exists for the sample
+    transposed_fixed_w_metadata = transposed_fixed.join(
+        pl.read_csv(metadata_path, separator="\t").unique(subset=["Sample"]),
+        on="Sample",
+        how="inner"
+    )
+
+    if return_metadata:
+        return transposed_fixed_w_metadata
+    else:
+        return transposed_fixed_w_metadata.drop(
+            columns=[
+                "GSE",
+                "Experimental Strategy",
+                "GPL",
+                "Condition",
+                "Tissue",
+                "Cell Type",
+                "Gender",
+                "Age",
+                "Ethnicity"
+            ]
+        )

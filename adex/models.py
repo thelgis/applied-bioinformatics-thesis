@@ -7,3 +7,16 @@ class Condition(Enum):
     SSc = 3
     SLE = 4
     SjS = 5
+
+
+METADATA_COLUMNS = [
+    "GSE",
+    "Experimental Strategy",
+    "GPL",
+    "Condition",
+    "Tissue",
+    "Cell Type",
+    "Gender",
+    "Age",
+    "Ethnicity"
+]

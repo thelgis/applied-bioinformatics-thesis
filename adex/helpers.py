@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Set
 
 from adex.type_aliases import Gene
-from adex.models import Condition
+from adex.models import Condition, METADATA_COLUMNS
 from polars import DataFrame
 import polars as pl
 
@@ -127,27 +127,15 @@ def get_pre_processed_dataset(
     # Make data that comes from different sources use the same value for nulls (e.g. metadata uses 'NA')
     final = transposed_fixed_w_metadata.select(
         pl
-            .all()
-            .replace(
-                mapping={
-                    "NA": None
-                }
-            )
+        .all()
+        .replace(
+            mapping={
+                "NA": None
+            }
+        )
     )
 
     if return_metadata:
         return final
     else:
-        return final.drop(
-            columns=[
-                "GSE",
-                "Experimental Strategy",
-                "GPL",
-                "Condition",
-                "Tissue",
-                "Cell Type",
-                "Gender",
-                "Age",
-                "Ethnicity"
-            ]
-        )
+        return final.drop(columns=METADATA_COLUMNS)

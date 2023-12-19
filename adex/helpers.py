@@ -124,10 +124,21 @@ def get_pre_processed_dataset(
         how="inner"
     )
 
+    # Make data that comes from different sources use the same value for nulls (e.g. metadata uses 'NA')
+    final = transposed_fixed_w_metadata.select(
+        pl
+            .all()
+            .replace(
+                mapping={
+                    "NA": None
+                }
+            )
+    )
+
     if return_metadata:
-        return transposed_fixed_w_metadata
+        return final
     else:
-        return transposed_fixed_w_metadata.drop(
+        return final.drop(
             columns=[
                 "GSE",
                 "Experimental Strategy",

@@ -6,6 +6,9 @@ from adex.type_aliases import Gene
 from adex.models import Condition, METADATA_COLUMNS
 from polars import DataFrame
 import polars as pl
+import pandas as pd
+from pandas.core.series import Series
+from matplotlib import pyplot as plt
 
 
 def load_data_per_condition(condition: Condition, path: str) -> List[DataFrame]:
@@ -139,3 +142,35 @@ def get_pre_processed_dataset(
         return final
     else:
         return final.drop(columns=METADATA_COLUMNS)
+
+
+def plot_condition_2d(
+        condition: Condition,
+        method: str,
+        x_label: str,
+        y_label: str,
+        df_to_plot: pd.DataFrame,
+        condition_column: Series
+) -> None:
+    plt.figure()
+    plt.figure(figsize=(10, 10))
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=14)
+
+    plt.xlabel(x_label, fontsize=20)
+    plt.ylabel(y_label, fontsize=20)
+    plt.title(f"{method} of {condition.name} Dataset", fontsize=20)
+
+    targets = ['Healthy', condition.name]
+    colors = ['g', 'r']
+
+    for target, color in zip(targets, colors):
+        indices = condition_column == target
+        plt.scatter(
+            df_to_plot.loc[indices, x_label],
+            df_to_plot.loc[indices, y_label],
+            c=color,
+            s=50
+        )
+
+    plt.legend(targets, prop={'size': 15})

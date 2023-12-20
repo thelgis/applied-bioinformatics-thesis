@@ -1,4 +1,4 @@
-from adex.helpers import get_pre_processed_dataset
+from adex.helpers import get_pre_processed_dataset, plot_condition_2d
 from adex.models import Condition, METADATA_COLUMNS
 
 import logging
@@ -8,7 +8,6 @@ import numpy as np
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from matplotlib import pyplot as plt
 
 
 class PcaHelper:
@@ -42,40 +41,24 @@ class PcaHelper:
         logging.info(f"Explained variation per principal component: {self.pca.explained_variance_ratio_}")
         logging.info(f"----------------------------------------------")
 
-    def as_pandas_dataframe(self) -> pd.DataFrame:
+    def pca_as_pandas_dataframe(self) -> pd.DataFrame:
         return pd.DataFrame(
             data=self.pca_fitted,
             columns=['PC1', 'PC2']
         )
 
-    def as_polars_dataframe(self) -> pl.DataFrame:
+    def pca_as_polars_dataframe(self) -> pl.DataFrame:
         return pl.DataFrame(
             data=self.pca_fitted,
             schema=['PC1', 'PC2']
         )
 
     def draw(self) -> None:
-        plt.figure()
-        plt.figure(figsize=(10, 10))
-        plt.xticks(fontsize=12)
-        plt.yticks(fontsize=14)
-
-        plt.xlabel('PC1', fontsize=20)
-        plt.ylabel('PC2', fontsize=20)
-        plt.title(f"Principal Component Analysis of {self.condition.name} Dataset", fontsize=20)
-
-        targets = ['Healthy', self.condition.name]
-        colors = ['g', 'r']
-
-        df = self.as_pandas_dataframe()
-
-        for target, color in zip(targets, colors):
-            index = self.dataset.to_pandas()['Condition'] == target
-            plt.scatter(
-                df.loc[index, 'PC1'],
-                df.loc[index, 'PC2'],
-                c=color,
-                s=50
-            )
-
-        plt.legend(targets, prop={'size': 15})
+        plot_condition_2d(
+            condition=self.condition,
+            method="Principal Component Analysis",
+            x_label="PC1",
+            y_label="PC2",
+            df_to_plot=self.pca_as_pandas_dataframe(),
+            condition_column=self.dataset.to_pandas()['Condition'],
+        )

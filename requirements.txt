@@ -1,7 +1,7 @@
 jupyter~=1.0.0
 
 pandas~=2.1.4
-polars~=0.20.3
+polars~=0.19.19
 pyarrow~=14.0.2
 
 numpy~=1.26.3

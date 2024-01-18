@@ -1,4 +1,7 @@
 from enum import Enum
+from typing import List, Tuple
+
+from adex.type_aliases import Color, Tissue
 
 
 class Condition(Enum):
@@ -20,3 +23,14 @@ METADATA_COLUMNS = [
     "Age",
     "Ethnicity"
 ]
+
+TISSUES: List[Tuple[Tissue, Color]] = [
+    ("Peripheral blood", "b"),
+    ("Whole blood", "g"),
+    ("Parotid gland", "r"),
+    ("Salivary gland", "c"),
+    ("Saliva", "m"),
+    ("Skin", "y"),
+    ("Synovial membrane", "k")
+]
+

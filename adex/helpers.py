@@ -1,8 +1,9 @@
+from dataclasses import dataclass
 from functools import reduce
 from pathlib import Path
-from typing import List, Set
+from typing import List, Set, Tuple
 
-from adex.type_aliases import Gene
+from adex.type_aliases import Gene, ConditionName, Color
 from adex.models import Condition, METADATA_COLUMNS
 from polars import DataFrame
 import polars as pl
@@ -144,13 +145,22 @@ def get_pre_processed_dataset(
         return final.drop(columns=METADATA_COLUMNS)
 
 
+@dataclass(frozen=True)
+class PlottingColorParameters:
+    """
+    This class is used to pass the plotting color parameters
+    """
+    column_that_defines_colors: Series
+    target_colors: List[Tuple[ConditionName, Color]]
+
+
 def plot_condition_2d(
         condition: Condition,
         method: str,
         x_label: str,
         y_label: str,
         df_to_plot: pd.DataFrame,
-        condition_column: Series
+        plotting_color_parameters: PlottingColorParameters
 ) -> None:
     plt.figure()
     plt.figure(figsize=(10, 10))
@@ -161,11 +171,8 @@ def plot_condition_2d(
     plt.ylabel(y_label, fontsize=20)
     plt.title(f"{method} of {condition.name} Dataset", fontsize=20)
 
-    targets = ['Healthy', condition.name]
-    colors = ['g', 'r']
-
-    for target, color in zip(targets, colors):
-        indices = condition_column == target
+    for target, color in plotting_color_parameters.target_colors:
+        indices = plotting_color_parameters.column_that_defines_colors == target
         plt.scatter(
             df_to_plot.loc[indices, x_label],
             df_to_plot.loc[indices, y_label],
@@ -173,4 +180,5 @@ def plot_condition_2d(
             s=50
         )
 
+    targets = [target for target, _ in plotting_color_parameters.target_colors]
     plt.legend(targets, prop={'size': 15})

@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Tuple
 
-from adex.helpers import get_pre_processed_dataset, plot_condition_2d
+from adex.helpers import get_pre_processed_dataset, plot_condition_2d, PlottingColorParameters
 from adex.models import Condition, METADATA_COLUMNS
 from sklearn.manifold import MDS
 from matplotlib import pyplot as plt
@@ -8,6 +8,8 @@ from matplotlib import pyplot as plt
 import logging
 import polars as pl
 import pandas as pd
+
+from adex.type_aliases import ConditionName, Color
 
 
 class MdsHelper:
@@ -51,7 +53,11 @@ class MdsHelper:
         plt.title = f"n_components/stress for {self.condition.name}"
         plt.show()
 
-    def draw_2d(self) -> None:
+    def draw_2d(
+        self,
+        column_that_defines_colors: str,
+        target_colors: List[Tuple[ConditionName, Color]]
+    ) -> None:
 
         mds = MDS(
             n_components=2,
@@ -71,5 +77,8 @@ class MdsHelper:
                 data=mds_fitted,
                 columns=['Dim1', 'Dim2']
             ),
-            condition_column=self.dataset.to_pandas()['Condition'],
+            plotting_color_parameters=PlottingColorParameters(
+                column_that_defines_colors=self.dataset.to_pandas()[column_that_defines_colors],
+                target_colors=target_colors
+            )
         )

@@ -1,4 +1,6 @@
-from adex.helpers import get_pre_processed_dataset, plot_condition_2d
+from typing import Tuple, List
+
+from adex.helpers import get_pre_processed_dataset, plot_condition_2d, PlottingColorParameters
 from adex.models import Condition, METADATA_COLUMNS
 
 import logging
@@ -8,6 +10,8 @@ import numpy as np
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+
+from adex.type_aliases import Color, ConditionName
 
 
 class PcaHelper:
@@ -53,12 +57,19 @@ class PcaHelper:
             schema=['PC1', 'PC2']
         )
 
-    def draw(self) -> None:
+    def draw(
+        self,
+        column_that_defines_colors: str,
+        target_colors: List[Tuple[ConditionName, Color]]
+    ) -> None:
         plot_condition_2d(
             condition=self.condition,
             method="Principal Component Analysis",
             x_label="PC1",
             y_label="PC2",
             df_to_plot=self.pca_as_pandas_dataframe(),
-            condition_column=self.dataset.to_pandas()['Condition'],
+            plotting_color_parameters=PlottingColorParameters(
+                column_that_defines_colors=self.dataset.to_pandas()[column_that_defines_colors],
+                target_colors=target_colors
+            )
         )

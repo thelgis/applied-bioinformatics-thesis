@@ -4,7 +4,8 @@ from pathlib import Path
 from typing import List, Set, Tuple
 
 from adex.type_aliases import Gene, ConditionName, Color
-from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader
+from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader, \
+    FileDataLoader
 from polars import DataFrame
 import polars as pl
 import pandas as pd
@@ -108,7 +109,12 @@ def get_pre_processed_dataset(
     :param return_metadata: if the metadata columns will be returned as part of the dataframe
     :return: a dataset of a particular condition pre-processed in its final state
     """
-    data: List[DataFrame] = load_data_per_condition(data_loader.condition, data_path)
+
+    match data_loader:
+        case FileDataLoader(condition, file_name):
+            data: List[DataFrame] = [pl.read_parquet(f"{data_path}/{condition.name}/{file_name}")]
+        case _:
+            data: List[DataFrame] = load_data_per_condition(data_loader.condition, data_path)
 
     # keep only frequent genes between datasets
     data_frequent_genes: DataFrame = high_frequency_genes_dataframe(data, allowed_null_percentage)
@@ -128,6 +134,7 @@ def get_pre_processed_dataset(
         how="inner"
     )
 
+    # Extra data filtering
     match data_loader:
         case ConditionTissueDataLoader(_, tissue):
             transposed_fixed_w_metadata = transposed_fixed_w_metadata.filter(pl.col("Tissue") == tissue.value)
@@ -180,6 +187,8 @@ def plot_condition_2d(
             plt.title(f"{method} of {condition.name} Dataset", fontsize=20)
         case ConditionTissueDataLoader(condition, tissue):
             plt.title(f"{method} of {condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
+        case FileDataLoader(condition, file_name):
+            plt.title(f"{method} of {condition.name} Dataset (File: '{file_name}')", fontsize=20)
 
     for target, color in plotting_color_parameters.target_colors:
         indices = plotting_color_parameters.column_that_defines_colors == target

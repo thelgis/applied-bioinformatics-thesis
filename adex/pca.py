@@ -1,7 +1,8 @@
 from typing import Tuple, List
 
 from adex.helpers import get_pre_processed_dataset, plot_condition_2d, PlottingColorParameters
-from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader
+from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader, \
+    FileDataLoader
 
 import logging
 import polars as pl
@@ -31,6 +32,10 @@ class PcaHelper:
                     logging.info(f"--- Running PCA for '{condition.name}'---")
                 case ConditionTissueDataLoader(condition, tissue):
                     logging.info(f"--- Running PCA for '{condition.name}/{tissue.value}'---")
+                case FileDataLoader(condition, file_name):
+                    logging.info(f"--- Running PCA for '{condition.name}/{file_name}'---")
+                case _:
+                    raise ValueError(f"DataLoader '{data_loader}' not handled in logging")
 
             samples, genes = self.dataset.shape
             logging.info(f"Loaded dataset for PCA with shape: Samples({samples}), Genes({genes})")

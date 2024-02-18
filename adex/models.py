@@ -54,10 +54,25 @@ class DataLoader:
 
 @dataclass(frozen=True)
 class ConditionDataLoader(DataLoader):
+    """
+    Loads all data of one condition
+    """
     condition: Condition
 
 
 @dataclass(frozen=True)
+class FileDataLoader(DataLoader):
+    """
+    Loads data from a specific file of a condition
+    """
+    condition: Condition
+    file_name: str
+
+
+@dataclass(frozen=True)
 class ConditionTissueDataLoader(DataLoader):
+    """
+    Loads all data of a specific condition and tissue
+    """
     condition: Condition
     tissue: TissueEnum

@@ -78,7 +78,7 @@ def high_frequency_genes_dataframe(
     head, *tail = dataframes
 
     outer_joined_df = reduce(
-        lambda left, right: left.join(right, on="gene", how="outer"),
+        lambda left, right: left.join(right, on="gene", how="outer_coalesce"),
         tail,
         head
     )
@@ -145,11 +145,7 @@ def get_pre_processed_dataset(
     final = transposed_fixed_w_metadata.select(
         pl
         .all()
-        .replace(
-            mapping={
-                "NA": None
-            }
-        )
+        .replace(old="NA", new=None)
     )
 
     if return_metadata:

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import List, Tuple
 
@@ -24,7 +25,18 @@ METADATA_COLUMNS = [
     "Ethnicity"
 ]
 
-TISSUES: List[Tuple[Tissue, Color]] = [
+
+class TissueEnum(Enum):
+    PERIPHERAL_BLOOD = "Peripheral blood"
+    WHOLE_BLOOD = "Whole blood"
+    PAROTIC_GLAND = "Parotid gland"
+    SALIVARY_GLAND = "Salivary gland"
+    SALIVA = "Saliva"
+    SKIN = "Skin"
+    SYNOVIAL_MEMBRANE = "Synovial membrane"
+
+
+TISSUE_COLORS: List[Tuple[Tissue, Color]] = [  # TODO build this using the enum with zip
     ("Peripheral blood", "b"),
     ("Whole blood", "g"),
     ("Parotid gland", "r"),
@@ -34,3 +46,18 @@ TISSUES: List[Tuple[Tissue, Color]] = [
     ("Synovial membrane", "k")
 ]
 
+
+@dataclass(frozen=True)
+class DataLoader:
+    condition: Condition
+
+
+@dataclass(frozen=True)
+class ConditionDataLoader(DataLoader):
+    condition: Condition
+
+
+@dataclass(frozen=True)
+class ConditionTissueDataLoader(DataLoader):
+    condition: Condition
+    tissue: TissueEnum

@@ -1,7 +1,7 @@
 from typing import List, Tuple
 
 from adex.helpers import get_pre_processed_dataset, plot_condition_2d, PlottingColorParameters
-from adex.models import Condition, METADATA_COLUMNS
+from adex.models import Condition, METADATA_COLUMNS, ConditionDataLoader
 from sklearn.manifold import MDS
 from matplotlib import pyplot as plt
 
@@ -21,7 +21,7 @@ class MdsHelper:
             metadata_path: str
     ):
         self.condition = condition
-        self.dataset: pl.DataFrame = get_pre_processed_dataset(condition, files_path, metadata_path)
+        self.dataset: pl.DataFrame = get_pre_processed_dataset(ConditionDataLoader(condition), files_path, metadata_path)
         logging.info(f"--- Initializing data to run MDS for condition '{condition.name}'---")
 
         samples, genes = self.dataset.shape
@@ -69,7 +69,7 @@ class MdsHelper:
         logging.info(f"MDS Stress: {mds.stress_}")
 
         plot_condition_2d(
-            condition=self.condition,
+            data_loader=ConditionDataLoader(self.condition),
             method="MDS",
             x_label="Dim1",
             y_label="Dim2",

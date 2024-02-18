@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List, Set, Tuple
 
 from adex.type_aliases import Gene, ConditionName, Color
-from adex.models import Condition, METADATA_COLUMNS
+from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader
 from polars import DataFrame
 import polars as pl
 import pandas as pd
@@ -94,21 +94,21 @@ def high_frequency_genes_dataframe(
 
 
 def get_pre_processed_dataset(
-    condition: Condition,
+    data_loader: DataLoader,
     data_path: str,
     metadata_path: str,
     allowed_null_percentage: float = 0.2,
     return_metadata: bool = True
 ) -> DataFrame:
     """
-    :param condition:
+    :param data_loader: determines the subset of the data that will be loaded
     :param data_path: the path where the samples are located
     :param metadata_path: the path where the metadata of the samples is located
     :param allowed_null_percentage: will keep only genes that have a lower than this null percentage across samples
     :param return_metadata: if the metadata columns will be returned as part of the dataframe
     :return: a dataset of a particular condition pre-processed in its final state
     """
-    data: List[DataFrame] = load_data_per_condition(condition, data_path)
+    data: List[DataFrame] = load_data_per_condition(data_loader.condition, data_path)
 
     # keep only frequent genes between datasets
     data_frequent_genes: DataFrame = high_frequency_genes_dataframe(data, allowed_null_percentage)
@@ -127,6 +127,12 @@ def get_pre_processed_dataset(
         on="Sample",
         how="inner"
     )
+
+    match data_loader:
+        case ConditionTissueDataLoader(_, tissue):
+            transposed_fixed_w_metadata = transposed_fixed_w_metadata.filter(pl.col("Tissue") == tissue.value)
+        case _:
+            pass  # nothing to do
 
     # Make data that comes from different sources use the same value for nulls (e.g. metadata uses 'NA')
     final = transposed_fixed_w_metadata.select(
@@ -155,7 +161,7 @@ class PlottingColorParameters:
 
 
 def plot_condition_2d(
-        condition: Condition,
+        data_loader: DataLoader,
         method: str,
         x_label: str,
         y_label: str,
@@ -169,7 +175,11 @@ def plot_condition_2d(
 
     plt.xlabel(x_label, fontsize=20)
     plt.ylabel(y_label, fontsize=20)
-    plt.title(f"{method} of {condition.name} Dataset", fontsize=20)
+    match data_loader:
+        case ConditionDataLoader(condition):
+            plt.title(f"{method} of {condition.name} Dataset", fontsize=20)
+        case ConditionTissueDataLoader(condition, tissue):
+            plt.title(f"{method} of {condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
 
     for target, color in plotting_color_parameters.target_colors:
         indices = plotting_color_parameters.column_that_defines_colors == target

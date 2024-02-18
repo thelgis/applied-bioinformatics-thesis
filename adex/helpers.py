@@ -151,7 +151,7 @@ def get_pre_processed_dataset(
     if return_metadata:
         return final
     else:
-        return final.drop(columns=METADATA_COLUMNS)
+        return final.drop(METADATA_COLUMNS)
 
 
 @dataclass(frozen=True)
@@ -185,6 +185,8 @@ def plot_condition_2d(
             plt.title(f"{method} of {condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
         case FileDataLoader(condition, file_name):
             plt.title(f"{method} of {condition.name} Dataset (File: '{file_name}')", fontsize=20)
+        case _:
+            raise ValueError(f"DataLoader '{data_loader}' not handled in plotting")
 
     for target, color in plotting_color_parameters.target_colors:
         indices = plotting_color_parameters.column_that_defines_colors == target

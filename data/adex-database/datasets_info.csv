@@ -1,16 +1,16 @@
 dataset,disease,method,title,samples
 GSE10325,SLE,"Expression profiling by array","Combined deficiency of proapoptotic regulators Bim and Fas results in the early onset of systemic autoimmunity	[HG-U133A] Affymetrix Human Genome U133A Array",67
-GSE10417,SSc,"Expression profiling by high throughput sequencing","Changes in macrophage transcriptome associate with systemic sclerosis and mediate GSDMA contribution to disease risk	Illumina HiSeq 2500 (Homo sapiens)",72
-GSE10849,SLE,"Expression profiling by array","Illumina HumanHT-12 V4.0 expression beadchip",512
-GSE11016,SLE RA,"Expression profiling by array","[HG-U219] Affymetrix Human Genome U219 Array",234
-GSE11017,SLE,"Expression profiling by array","[HT_HG-U133_Plus_PM] Affymetrix HT HG-U133+ PM Array Plate",154
-GSE11091,T1D,"Expression profiling by high throughput sequencing","Abnormal neutrophil signature in the blood and pancreas of presymptomatic and symptomatic type 1 diabetes	Illumina HiSeq 2500 (Homo sapiens)",42
-GSE11234,T1D,"Expression profiling by high throughput sequencing","Risk variants disrupting enhancers of TH1 and TREG cells in type 1 diabetes	Illumina HiSeq 2500 (Homo sapiens)",22
-GSE11793,SSc,"Expression profiling by array","Illumina HumanHT-12 WG-DASL V4.0 R2 expression beadchip, Illumina HumanMethylation450 BeadChip (HumanMethylation450_15017482)",74
+GSE104174,SSc,"Expression profiling by high throughput sequencing","Changes in macrophage transcriptome associate with systemic sclerosis and mediate GSDMA contribution to disease risk	Illumina HiSeq 2500 (Homo sapiens)",72
+GSE108497,SLE,"Expression profiling by array","Illumina HumanHT-12 V4.0 expression beadchip",512
+GSE110169,SLE RA,"Expression profiling by array","[HG-U219] Affymetrix Human Genome U219 Array",234
+GSE110174,SLE,"Expression profiling by array","[HT_HG-U133_Plus_PM] Affymetrix HT HG-U133+ PM Array Plate",154
+GSE110914,T1D,"Expression profiling by high throughput sequencing","Abnormal neutrophil signature in the blood and pancreas of presymptomatic and symptomatic type 1 diabetes	Illumina HiSeq 2500 (Homo sapiens)",42
+GSE112341,T1D,"Expression profiling by high throughput sequencing","Risk variants disrupting enhancers of TH1 and TREG cells in type 1 diabetes	Illumina HiSeq 2500 (Homo sapiens)",22
+GSE117931,SSc,"Expression profiling by array","Illumina HumanHT-12 WG-DASL V4.0 R2 expression beadchip, Illumina HumanMethylation450 BeadChip (HumanMethylation450_15017482)",74
 GSE11907,SLE,"Expression profiling by array","A modular analysis framework for blood genomics studies: application to systemic lupus erythematosus	[HG-U133A] Affymetrix Human Genome U133A Array [HG-U133B] Affymetrix Human Genome U133B Array",546
 GSE12021,RA,"Expression profiling by array","Identification of intra-group, inter-individual, and gene-specific variances in mRNA expression profiles in the rheumatoid arthritis synovial membrane	[HG-U133A] Affymetrix Human Genome U133A Array [HG-U133B] Affymetrix Human Genome U133B Array",57
-GSE12407,SSc,"Expression profiling by high throughput sequencing","The Long Non-coding RNA NRIR Drives IFN-Response in Monocytes: Implication for Systemic Sclerosis	Illumina HiSeq 2000 (Homo sapiens)",73
-GSE12493,SLE,"Expression profiling by high throughput sequencing","Hypersensitive IFN Responses in Lupus Keratinocytes Reveal Key Mechanistic Determinants in Cutaneous Lupus	Illumina HiSeq 4000 (Homo sapiens)",72
+GSE124073,SSc,"Expression profiling by high throughput sequencing","The Long Non-coding RNA NRIR Drives IFN-Response in Monocytes: Implication for Systemic Sclerosis	Illumina HiSeq 2000 (Homo sapiens)",73
+GSE124939,SLE,"Expression profiling by high throughput sequencing","Hypersensitive IFN Responses in Lupus Keratinocytes Reveal Key Mechanistic Determinants in Cutaneous Lupus	Illumina HiSeq 4000 (Homo sapiens)",72
 GSE13887,SLE,"Expression profiling by array","Activation of mammalian target of rapamycin controls the loss of TCRzeta in lupus T cells through HRES-1/Rab4-regulated lysosomal degradation	[HG-U133_Plus_2] Affymetrix Human Genome U133 Plus 2.0 Array",27
 GSE23117,SjS,"Expression profiling by array","Chitinases in the salivary glands and circulation of patients with Sjgren's syndrome: macrophage harbingers of disease severity	[HG-U133_Plus_2] Affymetrix Human Genome U133 Plus 2.0 Array",15
 GSE24706,SLE,"Expression profiling by array","Risk factors for ANA positivity in healthy persons	Illumina HumanWG-6 v3.0 expression beadchip",48
@@ -31,7 +31,7 @@ GSE63903,SSc,"Expression profiling by array","Increased CD226 Expression on CD8+
 GSE65010,RA,"Expression profiling by array","Phenotypic, Functional, and Gene Expression Profiling of Peripheral CD45RA+ and CD45RO+ CD4+CD25+CD127(low) Treg Cells in Patients With Chronic Rheumatoid Arthritis	[HG-U133_Plus_2] Affymetrix Human Genome U133 Plus 2.0 Array",48
 GSE65391,SLE,"Expression profiling by array","Personalized Immunomonitoring Uncovers Molecular Networks that Stratify Lupus Patients.	Illumina HumanHT-12 V4.0 expression beadchip",996
 GSE72509,SLE,"Expression profiling by high throughput sequencing","The Ro60 autoantigen binds endogenous retroelements and regulates inflammatory gene expression	Illumina HiSeq 2500 (Homo sapiens)",117
-GSE7451	,SjS,"Expression profiling by array","Salivary proteomic and genomic biomarkers for primary Sjgren's syndrome	[HG-U133_Plus_2] Affymetrix Human Genome U133 Plus 2.0 Array",20
+GSE7451,SjS,"Expression profiling by array","Salivary proteomic and genomic biomarkers for primary Sjgren's syndrome	[HG-U133_Plus_2] Affymetrix Human Genome U133 Plus 2.0 Array",20
 GSE77298,RA,"Expression profiling by array","Disease-Regulated Gene Therapy with Anti-Inflammatory Interleukin-10 Under the Control of the CXCL10 Promoter for the Treatment of Rheumatoid Arthritis	[HG-U133_Plus_2] Affymetrix Human Genome U133 Plus 2.0 Array",23
 GSE80183,SLE,"Expression profiling by high throughput sequencing","RNA-seq Analysis Reveals Unique Transcriptome Signatures in Systemic Lupus Erythematosus Patients with Distinct Autoantibody Specificities.	Illumina HiSeq 2000 (Homo sapiens)",16
 GSE82221,SLE,"Expression profiling by array","Illumina HumanHT-12 V4.0 expression beadchip, Illumina HumanMethylation450 BeadChip (HumanMethylation450_15017482)",110

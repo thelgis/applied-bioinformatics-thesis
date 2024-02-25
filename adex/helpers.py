@@ -36,7 +36,7 @@ def gene_intersection(dataframes: List[DataFrame]) -> Set[Gene]:
     common_genes = set()
 
     for df in dataframes:
-        if len(common_genes) == 0:
+        if len(common_genes) == 0:  # First iteration
             common_genes.update(
                 df.select("gene").to_series().to_list()
             )
@@ -129,7 +129,7 @@ def get_pre_processed_dataset(
 
     # join with metadata and keep a sample only if metadata exists for the sample
     transposed_fixed_w_metadata = transposed_fixed.join(
-        pl.read_csv(metadata_path, separator="\t").unique(subset=["Sample"]),
+        pl.read_csv(metadata_path, separator="\t").unique(subset=["Sample"]),  # Filters duplicate rows for a sample in metadata
         on="Sample",
         how="inner"
     )

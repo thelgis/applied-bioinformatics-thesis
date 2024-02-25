@@ -6,11 +6,11 @@ from adex.type_aliases import Color, Tissue
 
 
 class Condition(Enum):
-    RA = 1
-    T1D = 2
-    SSc = 3
-    SLE = 4
-    SjS = 5
+    RA = "Rheumatoid Arthritis"
+    T1D = "Type 1 Diabetes"
+    SSc = "Systemic Sclerosis"
+    SLE = "Systemic Lupus Erythematosus"
+    SjS = "Sjögren’s Syndrome"
 
 
 class SequencingTechnique(Enum):

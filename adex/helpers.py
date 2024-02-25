@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from functools import reduce
 from pathlib import Path
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Optional
 
 from adex.type_aliases import Gene, ConditionName, Color
 from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader, \
-    FileDataLoader
+    FileDataLoader, ConditionSequencingTissueDataLoader, DATASET_INFO_COLUMNS
 from polars import DataFrame
 import polars as pl
 import pandas as pd
@@ -98,16 +98,18 @@ def get_pre_processed_dataset(
     data_loader: DataLoader,
     data_path: str,
     metadata_path: str,
+    datasets_info_path: str,
     allowed_null_percentage: float = 0.2,
-    return_metadata: bool = True
-) -> DataFrame:
+    return_metadata: bool = True,
+) -> Optional[DataFrame]:
     """
     :param data_loader: determines the subset of the data that will be loaded
     :param data_path: the path where the samples are located
     :param metadata_path: the path where the metadata of the samples is located
+    :param datasets_info_path: the path where the datasets extra information is located
     :param allowed_null_percentage: will keep only genes that have a lower than this null percentage across samples
     :param return_metadata: if the metadata columns will be returned as part of the dataframe
-    :return: a dataset of a particular condition pre-processed in its final state
+    :return: a dataset of a particular condition/sequencing-method/tissue/file pre-processed in its final state
     """
 
     match data_loader:
@@ -127,10 +129,17 @@ def get_pre_processed_dataset(
             .rename({"gene": "Sample"})                     # fix header
     )
 
-    # join with metadata and keep a sample only if metadata exists for the sample
+    # join with various metadata files and keep a sample only if metadata exists for the sample
+    datasets_info = pl.read_csv(datasets_info_path)
+
     transposed_fixed_w_metadata = transposed_fixed.join(
-        pl.read_csv(metadata_path, separator="\t").unique(subset=["Sample"]),  # Filters duplicate rows for a sample in metadata
+        pl.read_csv(metadata_path).unique(subset=["Sample"]),  # Filters duplicate rows for a sample in metadata
         on="Sample",
+        how="inner"
+    ).join(
+        datasets_info,
+        left_on="GSE",
+        right_on="Dataset",
         how="inner"
     )
 
@@ -138,20 +147,32 @@ def get_pre_processed_dataset(
     match data_loader:
         case ConditionTissueDataLoader(_, tissue):
             transposed_fixed_w_metadata = transposed_fixed_w_metadata.filter(pl.col("Tissue") == tissue.value)
+        case ConditionSequencingTissueDataLoader(_, sequencing_technique, tissue):
+            transposed_fixed_w_metadata = (
+                transposed_fixed_w_metadata
+                .filter((pl.col("Tissue") == tissue.value) & (pl.col("Method") == sequencing_technique.value))
+            )
         case _:
             pass  # nothing to do
 
+    # NOT NEEDED ANY MORE, FIXED THE FILE
     # Make data that comes from different sources use the same value for nulls (e.g. metadata uses 'NA')
-    final = transposed_fixed_w_metadata.select(
-        pl
-        .all()
-        .replace(old="NA", new=None)
-    )
+    # final = transposed_fixed_w_metadata.select(
+    #     pl
+    #     .all()
+    #     .replace(old="NA", new=None)
+    # )
+
+    if transposed_fixed_w_metadata.shape[0] == 0:  # No rows
+        return None
+
+    # Drop a column if all values are null:
+    transposed_fixed_w_metadata = transposed_fixed_w_metadata[[s.name for s in transposed_fixed_w_metadata if not (s.null_count() == transposed_fixed_w_metadata.height)]]
 
     if return_metadata:
-        return final
+        return transposed_fixed_w_metadata
     else:
-        return final.drop(METADATA_COLUMNS)
+        return transposed_fixed_w_metadata.drop(METADATA_COLUMNS).drop(DATASET_INFO_COLUMNS)
 
 
 @dataclass(frozen=True)

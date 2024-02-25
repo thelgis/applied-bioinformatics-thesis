@@ -1,4 +1,4 @@
-dataset,disease,method,title,samples
+Dataset,Disease,Method,Title,Samples
 GSE10325,SLE,"Expression profiling by array","Combined deficiency of proapoptotic regulators Bim and Fas results in the early onset of systemic autoimmunity	[HG-U133A] Affymetrix Human Genome U133A Array",67
 GSE104174,SSc,"Expression profiling by high throughput sequencing","Changes in macrophage transcriptome associate with systemic sclerosis and mediate GSDMA contribution to disease risk	Illumina HiSeq 2500 (Homo sapiens)",72
 GSE108497,SLE,"Expression profiling by array","Illumina HumanHT-12 V4.0 expression beadchip",512

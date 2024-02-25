@@ -31,6 +31,15 @@ METADATA_COLUMNS = [
 ]
 
 
+DATASET_INFO_COLUMNS = [
+    "Dataset",
+    "Disease",
+    "Method",
+    "Title",
+    "Samples"
+]
+
+
 class TissueEnum(Enum):
     PERIPHERAL_BLOOD = "Peripheral blood"
     WHOLE_BLOOD = "Whole blood"
@@ -80,4 +89,14 @@ class ConditionTissueDataLoader(DataLoader):
     Loads all data of a specific condition and tissue
     """
     condition: Condition
+    tissue: TissueEnum
+
+
+@dataclass(frozen=True)
+class ConditionSequencingTissueDataLoader(DataLoader):
+    """
+    Loads all data of a specific condition, sequencing technique, and tissue
+    """
+    condition: Condition
+    sequencing_technique: SequencingTechnique
     tissue: TissueEnum

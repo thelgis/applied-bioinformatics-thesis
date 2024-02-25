@@ -13,6 +13,11 @@ class Condition(Enum):
     SjS = 5
 
 
+class SequencingTechnique(Enum):
+    MICROARRAYS = "Expression profiling by array"
+    RNA_SEQ = "Expression profiling by high throughput sequencing"
+
+
 METADATA_COLUMNS = [
     "GSE",
     "Experimental Strategy",

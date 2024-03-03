@@ -119,9 +119,20 @@ def get_pre_processed_dataset(
             data: List[DataFrame] = load_data_per_condition(data_loader.condition, data_path)
 
     # keep only frequent genes between datasets
-    data_frequent_genes: DataFrame = high_frequency_genes_dataframe(data, allowed_null_percentage)
+    # NOTE: Commenting! This is better to happen later after we apply more filtering, otherwise we end-up
+    #   with many nulls after the second filtering!
+    # data_frequent_genes: DataFrame = high_frequency_genes_dataframe(data, allowed_null_percentage)
 
-    transposed = data_frequent_genes.transpose(include_header=True, header_name='Sample')
+    # Join all dataframes (used to happen in `high_frequency_genes_dataframe` before)
+    head, *tail = data
+    joined_df: DataFrame = reduce(
+        lambda left, right: left.join(right, on="gene", how="outer_coalesce"),
+        tail,
+        head
+    )
+
+    # Transpose
+    transposed = joined_df.transpose(include_header=True, header_name='Sample')
     transposed_fixed = (
             transposed
             .rename(transposed.head(1).to_dicts().pop())    # add header
@@ -166,8 +177,8 @@ def get_pre_processed_dataset(
     if transposed_fixed_w_metadata.shape[0] == 0:  # No rows
         return None
 
-    # Drop a column if all values are null:
-    transposed_fixed_w_metadata = transposed_fixed_w_metadata[[s.name for s in transposed_fixed_w_metadata if not (s.null_count() == transposed_fixed_w_metadata.height)]]
+    # Drop a column if nulls exceed the 'allowed_null_percentage':
+    transposed_fixed_w_metadata = transposed_fixed_w_metadata[[s.name for s in transposed_fixed_w_metadata if ((s.null_count() / transposed_fixed_w_metadata.height) <= allowed_null_percentage)]]
 
     if return_metadata:
         return transposed_fixed_w_metadata

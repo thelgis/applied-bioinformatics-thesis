@@ -140,6 +140,11 @@ def get_pre_processed_dataset(
             .rename({"gene": "Sample"})                     # fix header
     )
 
+    # Change type of numerical columns
+    sample_col = transposed_fixed.select("Sample")
+    transposed_fixed = transposed_fixed.select(pl.exclude("Sample")).cast(pl.Float64)
+    transposed_fixed = sample_col.with_columns(transposed_fixed)
+
     # join with various metadata files and keep a sample only if metadata exists for the sample
     datasets_info = pl.read_csv(datasets_info_path)
 

@@ -5,7 +5,7 @@ from typing import List, Set, Tuple, Optional
 
 from adex.type_aliases import Gene, ConditionName, Color
 from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader, \
-    FileDataLoader, ConditionSequencingTissueDataLoader, DATASET_INFO_COLUMNS
+    FileDataLoader, ConditionSequencingTissueDataLoader, DATASET_INFO_COLUMNS, ConditionSequencingDataLoader
 from polars import DataFrame
 import polars as pl
 import pandas as pd
@@ -163,6 +163,11 @@ def get_pre_processed_dataset(
     match data_loader:
         case ConditionTissueDataLoader(_, tissue):
             transposed_fixed_w_metadata = transposed_fixed_w_metadata.filter(pl.col("Tissue") == tissue.value)
+        case ConditionSequencingDataLoader(_, sequencing_technique):
+            transposed_fixed_w_metadata = (
+                transposed_fixed_w_metadata
+                .filter(pl.col("Method") == sequencing_technique.value)
+            )
         case ConditionSequencingTissueDataLoader(_, sequencing_technique, tissue):
             transposed_fixed_w_metadata = (
                 transposed_fixed_w_metadata
@@ -217,13 +222,15 @@ def plot_condition_2d(
     plt.ylabel(y_label, fontsize=20)
     match data_loader:
         case ConditionDataLoader(condition):
-            plt.title(f"{method} of {condition.name} Dataset", fontsize=20)
+            plt.title(f"{method} of '{condition.name}' Dataset", fontsize=20)
         case ConditionTissueDataLoader(condition, tissue):
-            plt.title(f"{method} of {condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
+            plt.title(f"{method} of '{condition.name}|{tissue.value}' Dataset", fontsize=20)
         case FileDataLoader(condition, file_name):
-            plt.title(f"{method} of {condition.name} Dataset (File: '{file_name}')", fontsize=20)
+            plt.title(f"{method} of '{condition.name}|{file_name}' Dataset", fontsize=20)
+        case ConditionSequencingDataLoader(condition, sequencing_technique):
+            plt.title(f"{method} of '{condition.name}|{sequencing_technique.name}' Dataset", fontsize=20)
         case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
-            plt.title(f"{method} of {sequencing_technique.name}|{condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
+            plt.title(f"{method} of '{condition.name}|{sequencing_technique.name}|{tissue.value}' Dataset", fontsize=20)
         case _:
             raise ValueError(f"DataLoader '{data_loader}' not handled in plotting")
 

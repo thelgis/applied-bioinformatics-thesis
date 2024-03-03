@@ -63,6 +63,10 @@ TISSUE_COLORS: List[Tuple[Tissue, Color]] = [  # TODO build this using the enum 
 
 @dataclass(frozen=True)
 class DataLoader:
+    """
+    Algebraic Data Type for Data loaders. Maybe a bit more cumbersome than it should be,
+    but helps with useful errors in all parts of the code where we need to treat things differently for different data.
+    """
     condition: Condition
 
 
@@ -100,3 +104,12 @@ class ConditionSequencingTissueDataLoader(DataLoader):
     condition: Condition
     sequencing_technique: SequencingTechnique
     tissue: TissueEnum
+
+
+@dataclass(frozen=True)
+class ConditionSequencingDataLoader(DataLoader):
+    """
+    Loads all data of a specific condition and sequencing technique
+    """
+    condition: Condition
+    sequencing_technique: SequencingTechnique

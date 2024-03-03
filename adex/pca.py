@@ -3,7 +3,7 @@ from typing import Tuple, List, Optional
 from adex.helpers import get_pre_processed_dataset, plot_condition_2d, PlottingColorParameters
 from adex.models import DATASET_INFO_COLUMNS, METADATA_COLUMNS, DataLoader, ConditionDataLoader, \
     ConditionTissueDataLoader, \
-    FileDataLoader, ConditionSequencingTissueDataLoader
+    FileDataLoader, ConditionSequencingTissueDataLoader, ConditionSequencingDataLoader
 
 import logging
 import polars as pl
@@ -36,11 +36,13 @@ class PcaHelper:
                 case ConditionDataLoader(condition):
                     logging.info(f"--- Running PCA for '{condition.name}'---")
                 case ConditionTissueDataLoader(condition, tissue):
-                    logging.info(f"--- Running PCA for '{condition.name}/{tissue.value}'---")
+                    logging.info(f"--- Running PCA for '{condition.name}|{tissue.value}'---")
                 case FileDataLoader(condition, file_name):
-                    logging.info(f"--- Running PCA for '{condition.name}/{file_name}'---")
+                    logging.info(f"--- Running PCA for '{condition.name}|{file_name}'---")
+                case ConditionSequencingDataLoader(condition, sequencing_technique):
+                    logging.info(f"--- Running PCA for '{condition.name}|{sequencing_technique.name}'---")
                 case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
-                    logging.info(f"--- Running PCA for '{sequencing_technique.name}|{condition.name}|{tissue.name}'---")
+                    logging.info(f"--- Running PCA for '{condition.name}|{sequencing_technique.name}|{tissue.name}'---")
                 case _:
                     raise ValueError(f"DataLoader '{data_loader}' not handled in logging")
 

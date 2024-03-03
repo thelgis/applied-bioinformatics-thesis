@@ -1,8 +1,9 @@
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 
 from adex.helpers import get_pre_processed_dataset, plot_condition_2d, PlottingColorParameters
-from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLoader, ConditionTissueDataLoader, \
-    FileDataLoader
+from adex.models import DATASET_INFO_COLUMNS, METADATA_COLUMNS, DataLoader, ConditionDataLoader, \
+    ConditionTissueDataLoader, \
+    FileDataLoader, ConditionSequencingTissueDataLoader
 
 import logging
 import polars as pl
@@ -21,12 +22,16 @@ class PcaHelper:
             self,
             data_loader: DataLoader,
             files_path: str,
-            metadata_path: str
+            metadata_path: str,
+            datasets_info_path: str
     ):
         self.data_loader = data_loader
         self.condition = data_loader.condition
-        self.dataset: pl.DataFrame = get_pre_processed_dataset(data_loader, files_path, metadata_path)
-        if self.dataset.shape[0] > 0:
+        self.dataset: Optional[pl.DataFrame] = (
+            get_pre_processed_dataset(data_loader, files_path, metadata_path, datasets_info_path)
+        )
+
+        if self.dataset is not None and self.dataset.shape[0] > 0:
             match data_loader:
                 case ConditionDataLoader(condition):
                     logging.info(f"--- Running PCA for '{condition.name}'---")
@@ -34,13 +39,17 @@ class PcaHelper:
                     logging.info(f"--- Running PCA for '{condition.name}/{tissue.value}'---")
                 case FileDataLoader(condition, file_name):
                     logging.info(f"--- Running PCA for '{condition.name}/{file_name}'---")
+                case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
+                    logging.info(f"--- Running PCA for '{sequencing_technique.name}|{condition.name}|{tissue.name}'---")
                 case _:
                     raise ValueError(f"DataLoader '{data_loader}' not handled in logging")
 
             samples, genes = self.dataset.shape
             logging.info(f"Loaded dataset for PCA with shape: Samples({samples}), Genes({genes})")
 
-            dataset_only_features: pd.DataFrame = self.dataset.drop("Sample").drop(METADATA_COLUMNS).to_pandas()
+            dataset_only_features: pd.DataFrame = (
+                self.dataset.drop("Sample").drop(METADATA_COLUMNS).drop(DATASET_INFO_COLUMNS).to_pandas()
+            )
             dataset_features_array: np.ndarray = dataset_only_features.values
 
             dataset_features_normalized = StandardScaler().fit_transform(dataset_features_array)
@@ -75,7 +84,7 @@ class PcaHelper:
         column_that_defines_colors: str,
         target_colors: List[Tuple[ConditionName, Color]]
     ) -> None:
-        if self.dataset.shape[0] > 0:
+        if self.dataset is not None and self.dataset.shape[0] > 0:
             plot_condition_2d(
                 data_loader=self.data_loader,
                 method="Principal Component Analysis",

@@ -222,6 +222,8 @@ def plot_condition_2d(
             plt.title(f"{method} of {condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
         case FileDataLoader(condition, file_name):
             plt.title(f"{method} of {condition.name} Dataset (File: '{file_name}')", fontsize=20)
+        case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
+            plt.title(f"{method} of {sequencing_technique.name}|{condition.name} Dataset (Tissue: '{tissue.value}')", fontsize=20)
         case _:
             raise ValueError(f"DataLoader '{data_loader}' not handled in plotting")
 

@@ -41,7 +41,7 @@ class PcaHelper:
                     logging.info(f"--- Running PCA for '{condition.name}|{file_name}'---")
                 case ConditionSequencingDataLoader(condition, sequencing_technique):
                     logging.info(f"--- Running PCA for '{condition.name}|{sequencing_technique.name}'---")
-                case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
+                case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue, _):
                     logging.info(f"--- Running PCA for '{condition.name}|{sequencing_technique.name}|{tissue.name}'---")
                 case _:
                     raise ValueError(f"DataLoader '{data_loader}' not handled in logging")

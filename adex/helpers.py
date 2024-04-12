@@ -168,21 +168,24 @@ def get_pre_processed_dataset(
                 transposed_fixed_w_metadata
                 .filter(pl.col("Method") == sequencing_technique.value)
             )
-        case ConditionSequencingTissueDataLoader(_, sequencing_technique, tissue):
+        case ConditionSequencingTissueDataLoader(_, sequencing_technique, tissue, genes):
             transposed_fixed_w_metadata = (
                 transposed_fixed_w_metadata
                 .filter((pl.col("Tissue") == tissue.value) & (pl.col("Method") == sequencing_technique.value))
             )
+
+            # Keep only the specified genes
+            if genes is not None:
+                existing_columns: Set[str] = set(transposed_fixed_w_metadata.columns)
+
+                fixed_columns: Set[str] = {"Sample"}.union(METADATA_COLUMNS).union(DATASET_INFO_COLUMNS).intersection(existing_columns)
+                fixed_columns_and_genes: Set[str] = fixed_columns.union(set(genes))
+                common_columns_set: Set[str] = fixed_columns_and_genes.intersection(existing_columns)
+
+                common_columns: List[str] = ["Sample"] + list(fixed_columns - {"Sample"}) + list(common_columns_set - fixed_columns)  # Re-ordering
+                transposed_fixed_w_metadata = transposed_fixed_w_metadata.select(common_columns)
         case _:
             pass  # nothing to do
-
-    # NOT NEEDED ANY MORE, FIXED THE FILE
-    # Make data that comes from different sources use the same value for nulls (e.g. metadata uses 'NA')
-    # final = transposed_fixed_w_metadata.select(
-    #     pl
-    #     .all()
-    #     .replace(old="NA", new=None)
-    # )
 
     if transposed_fixed_w_metadata.shape[0] == 0:  # No rows
         return None
@@ -229,7 +232,7 @@ def plot_condition_2d(
             plt.title(f"{method} of '{condition.name}|{file_name}' Dataset", fontsize=20)
         case ConditionSequencingDataLoader(condition, sequencing_technique):
             plt.title(f"{method} of '{condition.name}|{sequencing_technique.name}' Dataset", fontsize=20)
-        case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
+        case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue, _):
             plt.title(f"{method} of '{condition.name}|{sequencing_technique.name}|{tissue.value}' Dataset", fontsize=20)
         case _:
             raise ValueError(f"DataLoader '{data_loader}' not handled in plotting")

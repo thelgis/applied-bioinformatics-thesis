@@ -45,7 +45,7 @@ class MdsHelper:
                     logging.info(f"--- Running MDS for '{condition.name}/{tissue.value}'---")
                 case FileDataLoader(condition, file_name):
                     logging.info(f"--- Running MDS for '{condition.name}/{file_name}'---")
-                case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue):
+                case ConditionSequencingTissueDataLoader(condition, sequencing_technique, tissue, _):
                     logging.info(f"--- Running MDS for '{sequencing_technique.name}|{condition.name}|{tissue.name}'---")
                 case _:
                     raise ValueError(f"DataLoader '{data_loader}' not handled in logging")

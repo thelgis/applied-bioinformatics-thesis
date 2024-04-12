@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from adex.type_aliases import Color, Tissue
 
@@ -99,11 +99,13 @@ class ConditionTissueDataLoader(DataLoader):
 @dataclass(frozen=True)
 class ConditionSequencingTissueDataLoader(DataLoader):
     """
-    Loads all data of a specific condition, sequencing technique, and tissue
+    Loads all data of a specific condition, sequencing technique, and tissue.
+    Optionally, keeps only the provided genes.
     """
     condition: Condition
     sequencing_technique: SequencingTechnique
     tissue: TissueEnum
+    genes: Optional[List[str]] = None
 
 
 @dataclass(frozen=True)

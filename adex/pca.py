@@ -47,7 +47,7 @@ class PcaHelper:
                     raise ValueError(f"DataLoader '{data_loader}' not handled in logging")
 
             samples, genes = self.dataset.shape
-            logging.info(f"Loaded dataset for PCA with shape: Samples({samples}), Genes({genes})")
+            logging.info(f"Loaded dataset for PCA with shape: Samples({samples}), Genes+Metadata({genes})")
 
             dataset_only_features: pd.DataFrame = (
                 self.dataset.drop("Sample").drop(METADATA_COLUMNS).drop(DATASET_INFO_COLUMNS).to_pandas()

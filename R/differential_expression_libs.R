@@ -10,9 +10,11 @@ run_edgeR <- function (input_csv, fdr_threshold = 0.05, logFC_threshold = 1) {
   # Determine groups vector
   groups_df <- dataset_with_metadata[c("Condition"),]
   groups <- as.character(groups_df[1,])
+  print("Groups:")
+  print(groups)
 
   # Remove metadata columns
-  dataset <- dataset_with_metadata[1:(nrow(dataset_with_metadata) - 11), ]
+  dataset <- dataset_with_metadata[1:(nrow(dataset_with_metadata) - 1), ] # There is only one metadata column i.e. 'Condition'
 
   # Convert to numeric matrix
   dataset_as_matrix <- as.matrix(sapply(dataset, as.numeric))

@@ -11,6 +11,7 @@ run_edgeR('RA_RNA_SEQ_SYNOVIAL_MEMBRANE.csv')
 # - Explained variation before DE was 28%/12% and moved to 51%/5%
 # - 148 differentially expressed genes
 # - Depends on two datasets GSE89408(good initial separation) and GSE90081(bad initial separation - consider excluding)
+run_edgeR('RA_GSE89408.csv')
 
 run_edgeR('SLE_RNA_SEQ_WHOLE_BLOOD.csv', logFC_threshold=0.5)  # logFC_threshold=1 returns only one gene
 # Negative Results:

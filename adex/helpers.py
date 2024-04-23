@@ -113,7 +113,7 @@ def get_pre_processed_dataset(
     """
 
     match data_loader:
-        case FileDataLoader(condition, file_name):
+        case FileDataLoader(condition, file_name, _):
             data: List[DataFrame] = [pl.read_parquet(f"{data_path}/{condition.name}/{file_name}")]
         case _:
             data: List[DataFrame] = load_data_per_condition(data_loader.condition, data_path)
@@ -168,22 +168,17 @@ def get_pre_processed_dataset(
                 transposed_fixed_w_metadata
                 .filter(pl.col("Method") == sequencing_technique.value)
             )
+        case FileDataLoader(_, _, genes):
+            if genes is not None:
+                transposed_fixed_w_metadata = _keep_only_selected_genes(transposed_fixed_w_metadata, genes)
         case ConditionSequencingTissueDataLoader(_, sequencing_technique, tissue, genes):
             transposed_fixed_w_metadata = (
                 transposed_fixed_w_metadata
                 .filter((pl.col("Tissue") == tissue.value) & (pl.col("Method") == sequencing_technique.value))
             )
 
-            # Keep only the specified genes
             if genes is not None:
-                existing_columns: Set[str] = set(transposed_fixed_w_metadata.columns)
-
-                fixed_columns: Set[str] = {"Sample"}.union(METADATA_COLUMNS).union(DATASET_INFO_COLUMNS).intersection(existing_columns)
-                fixed_columns_and_genes: Set[str] = fixed_columns.union(set(genes))
-                common_columns_set: Set[str] = fixed_columns_and_genes.intersection(existing_columns)
-
-                common_columns: List[str] = ["Sample"] + list(fixed_columns - {"Sample"}) + list(common_columns_set - fixed_columns)  # Re-ordering
-                transposed_fixed_w_metadata = transposed_fixed_w_metadata.select(common_columns)
+                transposed_fixed_w_metadata = _keep_only_selected_genes(transposed_fixed_w_metadata, genes)
         case _:
             pass  # nothing to do
 
@@ -197,6 +192,17 @@ def get_pre_processed_dataset(
         return transposed_fixed_w_metadata
     else:
         return transposed_fixed_w_metadata.drop(METADATA_COLUMNS).drop(DATASET_INFO_COLUMNS)
+
+
+def _keep_only_selected_genes(input: DataFrame, genes: List[str]) -> DataFrame:
+    existing_columns: Set[str] = set(input.columns)
+
+    fixed_columns: Set[str] = {"Sample"}.union(METADATA_COLUMNS).union(DATASET_INFO_COLUMNS).intersection(existing_columns)
+    fixed_columns_and_genes: Set[str] = fixed_columns.union(set(genes))
+    common_columns_set: Set[str] = fixed_columns_and_genes.intersection(existing_columns)
+
+    common_columns: List[str] = ["Sample"] + list(fixed_columns - {"Sample"}) + list(common_columns_set - fixed_columns)  # Re-ordering
+    return input.select(common_columns)
 
 
 @dataclass(frozen=True)
@@ -228,7 +234,7 @@ def plot_condition_2d(
             plt.title(f"{method} of '{condition.name}' Dataset", fontsize=20)
         case ConditionTissueDataLoader(condition, tissue):
             plt.title(f"{method} of '{condition.name}|{tissue.value}' Dataset", fontsize=20)
-        case FileDataLoader(condition, file_name):
+        case FileDataLoader(condition, file_name, _):
             plt.title(f"{method} of '{condition.name}|{file_name}' Dataset", fontsize=20)
         case ConditionSequencingDataLoader(condition, sequencing_technique):
             plt.title(f"{method} of '{condition.name}|{sequencing_technique.name}' Dataset", fontsize=20)

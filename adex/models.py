@@ -82,11 +82,12 @@ class ConditionDataLoader(DataLoader):
 class FileDataLoader(DataLoader):
     """
     Loads data from a specific file of a condition.
-    Optionally, keeps only the provided genes.
+    Optionally, keeps only the provided genes or only the provided samples.
     """
     condition: Condition
     file_name: str
     genes: Optional[List[str]] = None
+    samples: Optional[List[str]] = None
 
 
 @dataclass(frozen=True)

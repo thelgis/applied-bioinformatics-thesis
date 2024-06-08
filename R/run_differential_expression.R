@@ -25,3 +25,6 @@ run_edgeR('SSc_RNA_SEQ_WHOLE_BLOOD.csv')
 run_edgeR('SSc_RNA_SEQ_PERIPHERAL_BLOOD.csv')
 # Negative Results:
 # - No differentially expressed genes (also hinted by initial PCA)
+
+
+run_edgeR('GSE89408_only_train_samples.csv')  # Contains only the training set

@@ -113,7 +113,7 @@ def get_pre_processed_dataset(
     """
 
     match data_loader:
-        case FileDataLoader(condition, file_name, _):
+        case FileDataLoader(condition, file_name, _, _):
             data: List[DataFrame] = [pl.read_parquet(f"{data_path}/{condition.name}/{file_name}")]
         case _:
             data: List[DataFrame] = load_data_per_condition(data_loader.condition, data_path)
@@ -168,9 +168,11 @@ def get_pre_processed_dataset(
                 transposed_fixed_w_metadata
                 .filter(pl.col("Method") == sequencing_technique.value)
             )
-        case FileDataLoader(_, _, genes):
+        case FileDataLoader(_, _, genes, samples):
             if genes is not None:
                 transposed_fixed_w_metadata = _keep_only_selected_genes(transposed_fixed_w_metadata, genes)
+            if samples is not None:
+                transposed_fixed_w_metadata = _keep_only_selected_samples(transposed_fixed_w_metadata, samples)
         case ConditionSequencingTissueDataLoader(_, sequencing_technique, tissue, genes):
             transposed_fixed_w_metadata = (
                 transposed_fixed_w_metadata
@@ -205,6 +207,10 @@ def _keep_only_selected_genes(input: DataFrame, genes: List[str]) -> DataFrame:
     return input.select(common_columns)
 
 
+def _keep_only_selected_samples(input: DataFrame, samples: List[str]) -> DataFrame:
+    return input.filter(pl.col("Sample").is_in(samples))
+
+
 @dataclass(frozen=True)
 class PlottingColorParameters:
     """
@@ -234,7 +240,7 @@ def plot_condition_2d(
             plt.title(f"{method} of '{condition.name}' Dataset", fontsize=20)
         case ConditionTissueDataLoader(condition, tissue):
             plt.title(f"{method} of '{condition.name}|{tissue.value}' Dataset", fontsize=20)
-        case FileDataLoader(condition, file_name, _):
+        case FileDataLoader(condition, file_name, _, _):
             plt.title(f"{method} of '{condition.name}|{file_name}' Dataset", fontsize=20)
         case ConditionSequencingDataLoader(condition, sequencing_technique):
             plt.title(f"{method} of '{condition.name}|{sequencing_technique.name}' Dataset", fontsize=20)

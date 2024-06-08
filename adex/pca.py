@@ -37,7 +37,7 @@ class PcaHelper:
                     logging.info(f"--- Running PCA for '{condition.name}'---")
                 case ConditionTissueDataLoader(condition, tissue):
                     logging.info(f"--- Running PCA for '{condition.name}|{tissue.value}'---")
-                case FileDataLoader(condition, file_name, _):
+                case FileDataLoader(condition, file_name, _, _):
                     logging.info(f"--- Running PCA for '{condition.name}|{file_name}'---")
                 case ConditionSequencingDataLoader(condition, sequencing_technique):
                     logging.info(f"--- Running PCA for '{condition.name}|{sequencing_technique.name}'---")

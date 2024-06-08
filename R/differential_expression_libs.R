@@ -50,7 +50,7 @@ run_edgeR <- function (input_csv, fdr_threshold = 0.05, logFC_threshold = 1) {
   dir.create(path)
 
   # Save DE data
-  write.csv(results_table, paste0(path, "/edgeR_results.csv"), row.names=FALSE)
+  write.csv(results_table, paste0(path, "/edgeR_results.csv"), row.names=TRUE)
   write.csv(de_genes, paste0(path, "/edgeR_de_genes.csv"), row.names=FALSE)
 
   # Save smear plot

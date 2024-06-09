@@ -9,8 +9,11 @@ from adex.models import Condition, METADATA_COLUMNS, DataLoader, ConditionDataLo
 from polars import DataFrame
 import polars as pl
 import pandas as pd
+import numpy as np
 from pandas.core.series import Series
 from matplotlib import pyplot as plt
+
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
 
 
 def load_data_per_condition(condition: Condition, path: str) -> List[DataFrame]:
@@ -260,3 +263,32 @@ def plot_condition_2d(
 
     targets = [target for target, _ in plotting_color_parameters.target_colors]
     plt.legend(targets, prop={'size': 15})
+
+
+def run_ML_model(classifier, x_train, y_train, x_test, y_test):
+    # Rows: Predictions
+    # Columns: Facts
+    # TN FP
+    # FN TP
+
+    # TN (Healthy predicted Healthy): 7
+    # FP (Healthy predicted Diseased): 2
+    # FN (Diseased predicted Healthy): 0
+    # TP (Diseased predicted Diseased): 46
+
+    model = classifier.fit(x_train, np.ravel(y_train))
+    prediction = model.predict(x_test)
+
+    ConfusionMatrixDisplay(
+        confusion_matrix = confusion_matrix(y_test, prediction),
+        display_labels = ["Healthy", "Diseased"]
+    ).plot()
+
+    print(f"""
+        Accuracy: {accuracy_score(y_test, prediction)}
+        Precision: {precision_score(y_test, prediction)}
+        Recall: {recall_score(y_test, prediction)}
+        f1: {f1_score(y_test, prediction)}
+    """)
+
+    return model, prediction

@@ -13,7 +13,7 @@ import numpy as np
 from pandas.core.series import Series
 from matplotlib import pyplot as plt
 
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
 
 
@@ -266,17 +266,36 @@ def plot_condition_2d(
     plt.legend(targets, prop={'size': 15})
 
 
-def run_ml_model(classifier, x_train, y_train, x_test, y_test, cv=4):
+def run_ml_model(classifier, x_train, y_train, x_test, y_test, cv=4, param_grid=None):
     raveled_y_train = np.ravel(y_train)
-    model = classifier.fit(x_train, raveled_y_train)
+    base_model = classifier.fit(x_train, raveled_y_train)
+    print(f"Default Parameters of Base Model: {base_model.get_params()}")
+
+    # Possibly hyperparameter tuning with cross validation
+    if param_grid is not None:
+        print(f"Parameters for tuning provided: {param_grid}")
+
+        grid_search_cv = GridSearchCV(
+            estimator=classifier,
+            param_grid=param_grid,
+            cv=cv,
+            verbose=1
+        ).fit(x_train, raveled_y_train)
+
+        selected_model = grid_search_cv.best_estimator_
+        print("Running with hyper-parameter tuned model")
+        print(f"Optimised Model Parameters: {selected_model.get_params()}")
+    else:
+        print("Running with base model")
+        selected_model = base_model
 
     # Cross Validation
-    scores = cross_val_score(model, x_train, raveled_y_train, cv=cv)
+    scores = cross_val_score(selected_model, x_train, raveled_y_train, cv=cv)
     print(f"Cross Validation Scores (cv={cv}): {','.join([str(score) for score in scores])}")
     print("Cross Validation gives %0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
 
     # Test set
-    prediction = model.predict(x_test)
+    prediction = selected_model.predict(x_test)
     print("\nMetrics on the Test Set:")
 
     ConfusionMatrixDisplay(
@@ -291,4 +310,4 @@ def run_ml_model(classifier, x_train, y_train, x_test, y_test, cv=4):
         f1: {f1_score(y_test, prediction)}
     """)
 
-    return model, prediction
+    return selected_model, prediction

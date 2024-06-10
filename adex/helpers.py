@@ -13,6 +13,7 @@ import numpy as np
 from pandas.core.series import Series
 from matplotlib import pyplot as plt
 
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
 
 
@@ -265,23 +266,22 @@ def plot_condition_2d(
     plt.legend(targets, prop={'size': 15})
 
 
-def run_ML_model(classifier, x_train, y_train, x_test, y_test):
-    # Rows: Predictions
-    # Columns: Facts
-    # TN FP
-    # FN TP
+def run_ml_model(classifier, x_train, y_train, x_test, y_test, cv=4):
+    raveled_y_train = np.ravel(y_train)
+    model = classifier.fit(x_train, raveled_y_train)
 
-    # TN (Healthy predicted Healthy): 7
-    # FP (Healthy predicted Diseased): 2
-    # FN (Diseased predicted Healthy): 0
-    # TP (Diseased predicted Diseased): 46
+    # Cross Validation
+    scores = cross_val_score(model, x_train, raveled_y_train, cv=cv)
+    print(f"Cross Validation Scores (cv={cv}): {','.join([str(score) for score in scores])}")
+    print("Cross Validation gives %0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
 
-    model = classifier.fit(x_train, np.ravel(y_train))
+    # Test set
     prediction = model.predict(x_test)
+    print("\nMetrics on the Test Set:")
 
     ConfusionMatrixDisplay(
-        confusion_matrix = confusion_matrix(y_test, prediction),
-        display_labels = ["Healthy", "Diseased"]
+        confusion_matrix=confusion_matrix(y_test, prediction),
+        display_labels=["Healthy", "Diseased"]
     ).plot()
 
     print(f"""

@@ -23,13 +23,15 @@ class PcaHelper:
             data_loader: DataLoader,
             files_path: str,
             metadata_path: str,
-            datasets_info_path: str
+            datasets_info_path: str,
+            n_components=2
     ):
         self.data_loader = data_loader
         self.condition = data_loader.condition
         self.dataset: Optional[pl.DataFrame] = (
             get_pre_processed_dataset(data_loader, files_path, metadata_path, datasets_info_path)
         )
+        self.n_components = n_components
 
         if self.dataset is not None and self.dataset.shape[0] > 0:
             match data_loader:
@@ -61,7 +63,7 @@ class PcaHelper:
                 f"Standard Deviation:'{np.nanstd(dataset_features_normalized)}'"
             )
 
-            self.pca = PCA(n_components=2)
+            self.pca = PCA(n_components=n_components)
             self.pca_fitted = self.pca.fit_transform(pd.DataFrame(dataset_features_normalized).fillna(0))
 
             logging.info(f"Explained variation per principal component: {self.pca.explained_variance_ratio_}")
@@ -72,21 +74,24 @@ class PcaHelper:
     def pca_as_pandas_dataframe(self) -> pd.DataFrame:
         return pd.DataFrame(
             data=self.pca_fitted,
-            columns=['PC1', 'PC2']
+            columns=[f"PC{i+1}" for i in range(self.n_components)]
         )
 
     def pca_as_polars_dataframe(self) -> pl.DataFrame:
         return pl.DataFrame(
             data=self.pca_fitted,
-            schema=['PC1', 'PC2']
+            schema=[f"PC{i+1}" for i in range(self.n_components)]
         )
+
+    def explained_variance_ratio(self):
+        return self.pca.explained_variance_ratio_
 
     def draw(
         self,
         column_that_defines_colors: str,
         target_colors: List[Tuple[ConditionName, Color]]
     ) -> None:
-        if self.dataset is not None and self.dataset.shape[0] > 0:
+        if self.dataset is not None and self.dataset.shape[0] > 0 and self.n_components == 2:
             plot_condition_2d(
                 data_loader=self.data_loader,
                 method="Principal Component Analysis",

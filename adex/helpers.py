@@ -14,7 +14,8 @@ from pandas.core.series import Series
 from matplotlib import pyplot as plt
 
 from sklearn.model_selection import cross_val_score, GridSearchCV
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score, f1_score, RocCurveDisplay, precision_recall_curve, PrecisionRecallDisplay
+from sklearn.model_selection import LearningCurveDisplay, learning_curve
 
 
 def load_data_per_condition(condition: Condition, path: str) -> List[DataFrame]:
@@ -294,6 +295,16 @@ def run_ml_model(classifier, x_train, y_train, x_test, y_test, cv=4, param_grid=
     print(f"Cross Validation Scores (cv={cv}): {','.join([str(score) for score in scores])}")
     print("Cross Validation gives %0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
 
+    # Learning Curve
+    # train_sizes, train_scores, test_scores = learning_curve(selected_model, x_train, y_train)
+    # learning_curve_display = LearningCurveDisplay(
+    #     train_sizes=train_sizes,
+    #     train_scores=train_scores,
+    #     test_scores=test_scores,
+    #     score_name="Score"
+    # )
+    # learning_curve_display.plot()
+
     # Test set
     prediction = selected_model.predict(x_test)
     print("\nMetrics on the Test Set:")
@@ -302,6 +313,12 @@ def run_ml_model(classifier, x_train, y_train, x_test, y_test, cv=4, param_grid=
         confusion_matrix=confusion_matrix(y_test, prediction),
         display_labels=["Healthy", "Diseased"]
     ).plot()
+
+    # roc_curve = RocCurveDisplay.from_estimator(selected_model, x_test, y_test)
+
+    # precision, recall, _ = precision_recall_curve(y_test, prediction)
+    # precision_recall_curve_result = PrecisionRecallDisplay(precision=precision, recall=recall)
+    # precision_recall_curve_result.plot()
 
     print(f"""
         Accuracy: {accuracy_score(y_test, prediction)}
